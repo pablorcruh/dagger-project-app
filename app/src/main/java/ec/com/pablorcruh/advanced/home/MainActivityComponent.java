@@ -6,7 +6,9 @@ import dagger.android.AndroidInjector;
 import ec.com.pablorcruh.advanced.di.ActivityScope;
 
 @ActivityScope
-@Subcomponent
+@Subcomponent(modules = {
+     MainScreenBindingModule.class
+})
 public interface MainActivityComponent extends AndroidInjector<MainActivity> {
 
     @Subcomponent.Builder

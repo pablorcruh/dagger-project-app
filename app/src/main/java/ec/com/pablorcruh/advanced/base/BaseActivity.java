@@ -20,12 +20,14 @@ import javax.inject.Inject;
 import ec.com.pablorcruh.advanced.R;
 import ec.com.pablorcruh.advanced.di.Injector;
 import ec.com.pablorcruh.advanced.di.ScreenInjector;
+import ec.com.pablorcruh.advanced.ui.ScreenNavigator;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
     private static String INSTANCE_ID_KEY = "instance_id";
 
     @Inject ScreenInjector screenInjector;
+    @Inject ScreenNavigator screenNavigator;
 
     private String instanceId;
 
@@ -46,6 +48,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             throw new NullPointerException("Activity must have a view with id: screen_container");
         }
         router = Conductor.attachRouter(this, screenContainer, savedInstanceState);
+        screenNavigator.initWithRouter(router, initialScreen());
         monitorBackStack();
         super.onCreate(savedInstanceState);
     }
@@ -54,6 +57,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     @LayoutRes
     protected abstract int layoutRes();
 
+    protected abstract Controller initialScreen();
+
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -61,8 +66,16 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        if(!screenNavigator.pop()){
+            super.onBackPressed();
+        }
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
+        screenNavigator.clear();
         if(isFinishing()){
             Injector.clearComponent(this);
         }

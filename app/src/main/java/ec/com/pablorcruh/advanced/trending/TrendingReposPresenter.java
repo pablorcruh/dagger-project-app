@@ -3,8 +3,9 @@ package ec.com.pablorcruh.advanced.trending;
 import javax.inject.Inject;
 
 import ec.com.pablorcruh.advanced.data.RepoRequester;
+import ec.com.pablorcruh.advanced.models.Repo;
 
-public class TrendingReposPresenter {
+public class TrendingReposPresenter implements  RepoAdapter.RepoClickedListener{
 
     private final TrendingReposViewModel viewModel;
     private final RepoRequester repoRequester;
@@ -24,4 +25,8 @@ public class TrendingReposPresenter {
     }
 
 
+    @Override
+    public void onRepoClicked(Repo repo) {
+
+    }
 }
